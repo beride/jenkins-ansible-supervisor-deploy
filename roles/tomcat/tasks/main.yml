@@ -1,7 +1,0 @@
-
-
-- name: create tomcat directory ' {{ deploy_path }} '
-  file: path={{deploy_path}} state=directory owner={{tomcat_user}} group={{tomcat_group}}
-
-- stat: path={{deploy_path}}/tomcat-{{app}}
-  register: tomcat_path_register
