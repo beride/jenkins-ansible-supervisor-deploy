@@ -1,9 +1,9 @@
 ---
 - name: Stop Tomcat
-  supervisorctl: name=tomcat-{{app}} state=stopped
+  ssh: service tomcat stop
 
 - name: Delete app ROOT, ROOT.war
-  shell: rm -rf {{deploy_path}}/tomcat-{{app}}/webapps/ROOT {{deploy_path}}/tomcat-{{app}}/webapps/ROOT.war
+  shell: rm -rf {{deploy_path}}/webapps/{{application}}.war
   sudo: True
 
 - name: copy app war to tomcat/webapps
@@ -14,11 +14,9 @@
 - name: Change ownership of Tomcat webapps/ROOT.war
   file: path={{deploy_path}}/tomcat-{{app}}/webapps/ROOT.war owner={{tomcat_user}} group={{tomcat_group}}
 
-- name: supervisor add tomcat service
-  supervisorctl: name=tomcat-{{app}} state=present
 
 - name: supervisor start tomcat service
-  supervisorctl: name=tomcat-{{app}} state=started
+  shell: service tomcat start
 
 - name: wait for tomcat to start
-  wait_for: port={{http_port}} timeout=15
+  wait_for: port={{appport}} timeout=15
